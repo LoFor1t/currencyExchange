@@ -18,5 +18,21 @@
 <br/>
 <a href="exchangeRates">Get all exchange rates</a>
 
+<br/>
+<form method="post" action="${pageContext.request.contextPath}/currencies">
+    <label>
+        <input name="name">
+    </label>
+    <br/>
+    <label>
+        <input name="code">
+    </label>
+    <br/>
+    <label>
+        <input name="sign">
+    </label>
+    <br/>
+    <button type="submit">Create new currency</button>
+</form>
 </body>
 </html>

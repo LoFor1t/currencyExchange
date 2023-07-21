@@ -66,4 +66,18 @@ public class CurrencyModel {
         }
         return null;
     }
+
+    public static void createNewCurrency(String name, String code, String sign) throws SQLException {
+        String query = "INSERT INTO currencies (fullname, code, sign) values (?, ?, ?)";
+
+
+        Connection dbConnection = DBConnection.getDBConnection();
+        PreparedStatement statement;
+        statement = dbConnection.prepareStatement(query);
+        statement.setString(1, name);
+        statement.setString(2, code);
+        statement.setString(3, sign);
+
+        statement.execute();
+    }
 }
