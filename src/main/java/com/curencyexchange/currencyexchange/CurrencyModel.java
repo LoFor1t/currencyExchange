@@ -1,5 +1,7 @@
 package com.curencyexchange.currencyexchange;
 
+import com.curencyexchange.currencyexchange.Utils.DBConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

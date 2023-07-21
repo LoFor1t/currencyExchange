@@ -1,10 +1,9 @@
 package com.curencyexchange.currencyexchange;
 
+import com.curencyexchange.currencyexchange.Utils.DBConnection;
+
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +70,23 @@ public class ExchangeRateModel {
         statement.setInt(1, baseCurrency.ID);
         statement.setInt(2, targetCurrency.ID);
         statement.setBigDecimal(3, rate);
+
+        statement.execute();
+    }
+
+    public static void updateRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal newRate) throws SQLException {
+        Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
+        Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+
+        final String query = "UPDATE exchangeRates SET rate = ? WHERE basecurrencyid = ? AND targetcurrencyid = ?";
+
+        Connection dbConnection = DBConnection.getDBConnection();
+
+        PreparedStatement statement = dbConnection.prepareStatement(query);
+
+        statement.setBigDecimal(1, newRate);
+        statement.setInt(2, baseCurrency.ID);
+        statement.setInt(3, targetCurrency.ID);
 
         statement.execute();
     }
