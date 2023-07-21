@@ -1,5 +1,6 @@
 package com.curencyexchange.currencyexchange;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,4 +58,20 @@ public class ExchangeRateModel {
         return null;
     }
 
+    public static void createNewExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws SQLException {
+        Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
+        Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+
+        final String query = "INSERT INTO exchangerates(basecurrencyid, targetcurrencyid, rate) VALUES (?, ?, ?)";
+
+        Connection dbConnection = DBConnection.getDBConnection();
+
+        PreparedStatement statement = dbConnection.prepareStatement(query);
+
+        statement.setInt(1, baseCurrency.ID);
+        statement.setInt(2, targetCurrency.ID);
+        statement.setBigDecimal(3, rate);
+
+        statement.execute();
+    }
 }

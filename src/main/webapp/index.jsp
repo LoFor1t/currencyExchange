@@ -34,5 +34,22 @@
     <br/>
     <button type="submit">Create new currency</button>
 </form>
+
+<br/>
+<form method="post" action="${pageContext.request.contextPath}/exchangeRates">
+    <label>
+        <input name="baseCurrencyCode">
+    </label>
+    <br/>
+    <label>
+        <input name="targetCurrencyCode">
+    </label>
+    <br/>
+    <label>
+        <input name="rate">
+    </label>
+    <br/>
+    <button type="submit">Create new exchange rate.</button>
+</form>
 </body>
 </html>
