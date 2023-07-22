@@ -1,7 +1,7 @@
 package com.curencyexchange.currencyexchange.servlets;
 
-import com.curencyexchange.currencyexchange.ExchangeRate;
-import com.curencyexchange.currencyexchange.ExchangeRateModel;
+import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
+import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
 import com.curencyexchange.currencyexchange.Utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

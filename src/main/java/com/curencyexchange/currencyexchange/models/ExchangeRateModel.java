@@ -1,6 +1,8 @@
-package com.curencyexchange.currencyexchange;
+package com.curencyexchange.currencyexchange.models;
 
 import com.curencyexchange.currencyexchange.Utils.DBConnection;
+import com.curencyexchange.currencyexchange.dataClasses.Currency;
+import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
 
 import java.math.BigDecimal;
 import java.sql.*;

@@ -1,4 +1,4 @@
-package com.curencyexchange.currencyexchange;
+package com.curencyexchange.currencyexchange.dataClasses;
 
 public class Currency {
     public int ID;

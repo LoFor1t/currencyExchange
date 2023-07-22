@@ -1,7 +1,7 @@
 package com.curencyexchange.currencyexchange.servlets;
 
-import com.curencyexchange.currencyexchange.Currency;
-import com.curencyexchange.currencyexchange.CurrencyModel;
+import com.curencyexchange.currencyexchange.dataClasses.Currency;
+import com.curencyexchange.currencyexchange.models.CurrencyModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

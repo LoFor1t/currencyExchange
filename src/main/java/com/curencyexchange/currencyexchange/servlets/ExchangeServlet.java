@@ -1,9 +1,9 @@
 package com.curencyexchange.currencyexchange.servlets;
 
-import com.curencyexchange.currencyexchange.CurrencyModel;
-import com.curencyexchange.currencyexchange.Exchange;
-import com.curencyexchange.currencyexchange.ExchangeRate;
-import com.curencyexchange.currencyexchange.ExchangeRateModel;
+import com.curencyexchange.currencyexchange.models.CurrencyModel;
+import com.curencyexchange.currencyexchange.dataClasses.Exchange;
+import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
+import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.SQLException;
 
 @WebServlet("/exchange")

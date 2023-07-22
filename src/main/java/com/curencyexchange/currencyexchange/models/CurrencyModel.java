@@ -1,6 +1,7 @@
-package com.curencyexchange.currencyexchange;
+package com.curencyexchange.currencyexchange.models;
 
 import com.curencyexchange.currencyexchange.Utils.DBConnection;
+import com.curencyexchange.currencyexchange.dataClasses.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;

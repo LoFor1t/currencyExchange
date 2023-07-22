@@ -1,4 +1,4 @@
-package com.curencyexchange.currencyexchange;
+package com.curencyexchange.currencyexchange.dataClasses;
 
 import java.math.BigDecimal;
 
