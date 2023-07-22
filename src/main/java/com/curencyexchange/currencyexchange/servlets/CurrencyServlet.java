@@ -25,6 +25,11 @@ public class CurrencyServlet extends HttpServlet {
 
         String currencyCode = requestPath.replace("/", "");
 
+        if (currencyCode.length() != 3) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Введён не верный код валюты.");
+            return;
+        }
+
         try {
             Currency currency = CurrencyModel.getCurrencyByCode(currencyCode);
             if (currency == null) {
