@@ -64,9 +64,13 @@ public class ExchangeRateModel {
         return null;
     }
 
-    public static void createNewExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws SQLException {
+    public static void createNewExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws SQLException, nonExistentCurrencyException {
         Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
         Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+
+        if (baseCurrency == null || targetCurrency == null) {
+            throw new nonExistentCurrencyException();
+        }
 
         final String query = "INSERT INTO exchangerates(basecurrencyid, targetcurrencyid, rate) VALUES (?, ?, ?)";
 
@@ -81,9 +85,13 @@ public class ExchangeRateModel {
         statement.execute();
     }
 
-    public static void updateRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal newRate) throws SQLException {
+    public static void updateRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal newRate) throws SQLException, nonExistentCurrencyException {
         Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
         Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+
+        if (baseCurrency == null || targetCurrency == null) {
+            throw new nonExistentCurrencyException();
+        }
 
         final String query = "UPDATE exchangeRates SET rate = ? WHERE basecurrencyid = ? AND targetcurrencyid = ?";
 

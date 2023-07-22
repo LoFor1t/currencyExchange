@@ -30,7 +30,12 @@ public class ExchangeRatesServlet extends HttpServlet {
         String targetCurrencyCode = req.getParameter("targetCurrencyCode");
         String stringRate = req.getParameter("rate");
 
-        if (baseCurrencyCode.length() == 0 || targetCurrencyCode.length() == 0 || stringRate.length() == 0) {
+        if (baseCurrencyCode == null || targetCurrencyCode == null || stringRate == null) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Отсутствует нужно поле формы.");
+            return;
+        }
+
+        if (baseCurrencyCode.length() == 0 || targetCurrencyCode.length() == 0 || stringRate.length() == 0){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Отсутствует нужно поле формы.");
             return;
         }
