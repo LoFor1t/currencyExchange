@@ -76,7 +76,12 @@ public class ExchangeRateServlet extends HttpServlet {
 
         try {
             ExchangeRateModel.updateRate(baseCurrencyCode, targetCurrencyCode, rate);
-            new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateModel.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode));
+            ExchangeRate updatedExchangeRate = ExchangeRateModel.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode);
+            if (updatedExchangeRate == null) {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, " Currency pair does not exist in the database.");
+                return;
+            }
+            new ObjectMapper().writeValue(resp.getWriter(), updatedExchangeRate);
         } catch (SQLException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database is not available.");
         } catch (nonExistentCurrencyException e) {
