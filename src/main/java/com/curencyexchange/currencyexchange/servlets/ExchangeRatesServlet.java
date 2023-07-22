@@ -1,5 +1,6 @@
 package com.curencyexchange.currencyexchange.servlets;
 
+import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
 import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -45,6 +46,8 @@ public class ExchangeRatesServlet extends HttpServlet {
                 return;
             }
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database is not available");
+        } catch (nonExistentCurrencyException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "We did not find one of currencies.");
         }
     }
 }

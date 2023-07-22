@@ -1,6 +1,7 @@
 package com.curencyexchange.currencyexchange.servlets;
 
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
+import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
 import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
 import com.curencyexchange.currencyexchange.Utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,7 +46,9 @@ public class ExchangeRateServlet extends HttpServlet {
             }
             new ObjectMapper().writeValue(resp.getWriter(), exchangeRate);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database is not available.");
+        } catch (nonExistentCurrencyException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "We did not find one of currencies.");
         }
     }
 
@@ -75,8 +78,9 @@ public class ExchangeRateServlet extends HttpServlet {
             ExchangeRateModel.updateRate(baseCurrencyCode, targetCurrencyCode, rate);
             new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateModel.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode));
         } catch (SQLException e) {
-            System.out.println(e.getSQLState());
-            System.out.println(e.getMessage());
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database is not available.");
+        } catch (nonExistentCurrencyException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "We did not find one of currencies.");
         }
     }
 }

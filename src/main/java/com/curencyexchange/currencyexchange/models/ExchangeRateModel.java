@@ -3,6 +3,7 @@ package com.curencyexchange.currencyexchange.models;
 import com.curencyexchange.currencyexchange.Utils.DBConnection;
 import com.curencyexchange.currencyexchange.dataClasses.Currency;
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
+import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -36,9 +37,13 @@ public class ExchangeRateModel {
         return exchangeRatesList;
     }
 
-    public static ExchangeRate getExchangeRateByCode(String baseCurrencyCode, String targetCurrencyCode) throws SQLException {
+    public static ExchangeRate getExchangeRateByCode(String baseCurrencyCode, String targetCurrencyCode) throws SQLException, nonExistentCurrencyException {
         Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
         Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+
+        if (baseCurrency == null || targetCurrency == null) {
+            throw new nonExistentCurrencyException();
+        }
 
         final String query = "SELECT * FROM exchangeRates WHERE basecurrencyid = ? AND targetcurrencyid = ?";
 

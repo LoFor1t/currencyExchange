@@ -1,5 +1,6 @@
 package com.curencyexchange.currencyexchange.servlets;
 
+import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
 import com.curencyexchange.currencyexchange.models.CurrencyModel;
 import com.curencyexchange.currencyexchange.dataClasses.Exchange;
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
@@ -59,6 +60,8 @@ public class ExchangeServlet extends HttpServlet {
         catch (SQLException e) {
             System.out.println(e.getMessage());
             System.out.println(e.getSQLState());
+        } catch (nonExistentCurrencyException e) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "We did not find one of currencies.");
         }
     }
 }
