@@ -1,15 +1,31 @@
 package com.curencyexchange.currencyexchange.dataClasses;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "currencies")
 public class Currency {
-    public int ID;
+    @Id
+    @GeneratedValue
+    @Column(name = "id")
+    public int id;
+
+    @Column(name = "fullname", nullable = false)
     public String name;
+
+    @Column(name = "code", length = 3, nullable = false)
     public String code;
+
+    @Column(name = "sign", nullable = true)
     public String sign;
 
-    public Currency(int id, String code, String fullName, String sign) {
-        this.ID = id;
+    public Currency(String name, String code, String sign) {
+        this.name = name;
         this.code = code;
-        this.name = fullName;
         this.sign = sign;
+    }
+
+    public Currency() {
+
     }
 }

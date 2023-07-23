@@ -51,8 +51,8 @@ public class ExchangeRateModel {
 
         PreparedStatement statement = dbConnection.prepareStatement(query);
 
-        statement.setInt(1, baseCurrency.ID);
-        statement.setInt(2, targetCurrency.ID);
+        statement.setInt(1, baseCurrency.id);
+        statement.setInt(2, targetCurrency.id);
 
         statement.execute();
 
@@ -78,8 +78,8 @@ public class ExchangeRateModel {
 
         PreparedStatement statement = dbConnection.prepareStatement(query);
 
-        statement.setInt(1, baseCurrency.ID);
-        statement.setInt(2, targetCurrency.ID);
+        statement.setInt(1, baseCurrency.id);
+        statement.setInt(2, targetCurrency.id);
         statement.setBigDecimal(3, rate);
 
         statement.execute();
@@ -100,8 +100,8 @@ public class ExchangeRateModel {
         PreparedStatement statement = dbConnection.prepareStatement(query);
 
         statement.setBigDecimal(1, newRate);
-        statement.setInt(2, baseCurrency.ID);
-        statement.setInt(3, targetCurrency.ID);
+        statement.setInt(2, baseCurrency.id);
+        statement.setInt(3, targetCurrency.id);
 
         statement.execute();
     }

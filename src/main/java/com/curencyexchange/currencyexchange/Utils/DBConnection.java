@@ -1,9 +1,15 @@
 package com.curencyexchange.currencyexchange.Utils;
 
+import com.curencyexchange.currencyexchange.dataClasses.Currency;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.sql.*;
 
 public class DBConnection {
     private static Connection connection;
+    private static SessionFactory sessionFactory;
+
 
     public static Connection getDBConnection () throws SQLException {
         if (connection == null) {
@@ -16,6 +22,19 @@ public class DBConnection {
                     "jdbc:postgresql://localhost:5432/currencyExchange",
                     "postgres", "password");
         }
+
         return connection;
+
+    }
+
+    public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null) {
+            sessionFactory = new Configuration()
+                    .configure()
+                    .addAnnotatedClass(Currency.class)
+                    .buildSessionFactory();
+        }
+
+        return sessionFactory;
     }
 }
