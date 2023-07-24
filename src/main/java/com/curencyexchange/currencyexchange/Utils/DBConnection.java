@@ -1,6 +1,7 @@
 package com.curencyexchange.currencyexchange.Utils;
 
 import com.curencyexchange.currencyexchange.dataClasses.Currency;
+import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -32,6 +33,7 @@ public class DBConnection {
             sessionFactory = new Configuration()
                     .configure()
                     .addAnnotatedClass(Currency.class)
+                    .addAnnotatedClass(ExchangeRate.class)
                     .buildSessionFactory();
         }
 

@@ -16,7 +16,7 @@ public class Currency {
     @Column(name = "code", length = 3, nullable = false)
     public String code;
 
-    @Column(name = "sign", nullable = true)
+    @Column(name = "sign")
     public String sign;
 
     public Currency(String name, String code, String sign) {

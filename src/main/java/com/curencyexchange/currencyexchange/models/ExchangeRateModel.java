@@ -4,6 +4,9 @@ import com.curencyexchange.currencyexchange.Utils.DBConnection;
 import com.curencyexchange.currencyexchange.dataClasses.Currency;
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
 import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -11,30 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExchangeRateModel {
-    private static ExchangeRate createNewExchangeRate(ResultSet resultSet, Currency baseCurrency, Currency targetCurrency) throws SQLException {
-        return new ExchangeRate(resultSet.getInt(1), baseCurrency, targetCurrency, resultSet.getBigDecimal(4));
-    }
-
     public static List<ExchangeRate> getExchangeRates() throws SQLException {
-        final String query = "SELECT * FROM exchangeRates";
-
-        ArrayList<ExchangeRate> exchangeRatesList = new ArrayList<>();
-
-        Connection dbConnection = DBConnection.getDBConnection();
-
-        PreparedStatement statement = dbConnection.prepareStatement(query);
-
-        statement.execute();
-
-        ResultSet resultSet = statement.getResultSet();
-
-        while (resultSet.next()) {
-            Currency baseCurrency = CurrencyModel.getCurrencyByID(resultSet.getInt(2));
-            Currency targetCurrency = CurrencyModel.getCurrencyByID(resultSet.getInt(3));
-            exchangeRatesList.add(createNewExchangeRate(resultSet, baseCurrency, targetCurrency));
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            Query<ExchangeRate> query = session.createQuery("from ExchangeRate", ExchangeRate.class);
+            return query.list();
         }
-
-        return exchangeRatesList;
     }
 
     public static ExchangeRate getExchangeRateByCode(String baseCurrencyCode, String targetCurrencyCode) throws SQLException, nonExistentCurrencyException {
@@ -45,23 +29,18 @@ public class ExchangeRateModel {
             throw new nonExistentCurrencyException();
         }
 
-        final String query = "SELECT * FROM exchangeRates WHERE basecurrencyid = ? AND targetcurrencyid = ?";
-
-        Connection dbConnection = DBConnection.getDBConnection();
-
-        PreparedStatement statement = dbConnection.prepareStatement(query);
-
-        statement.setInt(1, baseCurrency.id);
-        statement.setInt(2, targetCurrency.id);
-
-        statement.execute();
-
-        ResultSet resultSet = statement.getResultSet();
-
-        if (resultSet.next()) {
-            return createNewExchangeRate(resultSet, baseCurrency, targetCurrency);
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            final String hql = "FROM ExchangeRate WHERE baseCurrency.id = :basecurrencyid AND targetCurrency.id = :targetcurrencyid";
+            Query<ExchangeRate> query = session.createQuery(hql, ExchangeRate.class);
+            query.setParameter("basecurrencyid", baseCurrency.id);
+            query.setParameter("targetcurrencyid", targetCurrency.id);
+            List<ExchangeRate> exchangeRate = query.list();
+            if (exchangeRate.size() != 0) {
+                return exchangeRate.get(0);
+            } else {
+                return null;
+            }
         }
-        return null;
     }
 
     public static void createNewExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws SQLException, nonExistentCurrencyException {
@@ -72,17 +51,13 @@ public class ExchangeRateModel {
             throw new nonExistentCurrencyException();
         }
 
-        final String query = "INSERT INTO exchangerates(basecurrencyid, targetcurrencyid, rate) VALUES (?, ?, ?)";
+        ExchangeRate newExchangeRate = new ExchangeRate(baseCurrency, targetCurrency, rate);
 
-        Connection dbConnection = DBConnection.getDBConnection();
-
-        PreparedStatement statement = dbConnection.prepareStatement(query);
-
-        statement.setInt(1, baseCurrency.id);
-        statement.setInt(2, targetCurrency.id);
-        statement.setBigDecimal(3, rate);
-
-        statement.execute();
+        try (Session session = DBConnection.getSessionFactory().openSession()){
+            Transaction transaction = session.beginTransaction();
+            session.persist(newExchangeRate);
+            transaction.commit();
+        }
     }
 
     public static void updateRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal newRate) throws SQLException, nonExistentCurrencyException {
@@ -92,17 +67,16 @@ public class ExchangeRateModel {
         if (baseCurrency == null || targetCurrency == null) {
             throw new nonExistentCurrencyException();
         }
+        ExchangeRate exchangeRate = getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode);
 
-        final String query = "UPDATE exchangeRates SET rate = ? WHERE basecurrencyid = ? AND targetcurrencyid = ?";
-
-        Connection dbConnection = DBConnection.getDBConnection();
-
-        PreparedStatement statement = dbConnection.prepareStatement(query);
-
-        statement.setBigDecimal(1, newRate);
-        statement.setInt(2, baseCurrency.id);
-        statement.setInt(3, targetCurrency.id);
-
-        statement.execute();
+        if (exchangeRate == null) {
+            throw new nonExistentCurrencyException();
+        }
+        exchangeRate.rate = newRate;
+        try (Session session = DBConnection.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.merge(exchangeRate);
+            transaction.commit();
+        }
     }
 }
