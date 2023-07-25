@@ -10,10 +10,9 @@ import org.hibernate.query.Query;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ExchangeRateModel {
+public class ExchangeRateDAO {
     public static List<ExchangeRate> getExchangeRates() throws SQLException {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             Query<ExchangeRate> query = session.createQuery("from ExchangeRate", ExchangeRate.class);
@@ -22,8 +21,8 @@ public class ExchangeRateModel {
     }
 
     public static ExchangeRate getExchangeRateByCode(String baseCurrencyCode, String targetCurrencyCode) throws SQLException, nonExistentCurrencyException {
-        Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
-        Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+        Currency baseCurrency = CurrencyDAO.getCurrencyByCode(baseCurrencyCode);
+        Currency targetCurrency = CurrencyDAO.getCurrencyByCode(targetCurrencyCode);
 
         if (baseCurrency == null || targetCurrency == null) {
             throw new nonExistentCurrencyException();
@@ -44,8 +43,8 @@ public class ExchangeRateModel {
     }
 
     public static void createNewExchangeRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal rate) throws SQLException, nonExistentCurrencyException {
-        Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
-        Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+        Currency baseCurrency = CurrencyDAO.getCurrencyByCode(baseCurrencyCode);
+        Currency targetCurrency = CurrencyDAO.getCurrencyByCode(targetCurrencyCode);
 
         if (baseCurrency == null || targetCurrency == null) {
             throw new nonExistentCurrencyException();
@@ -61,8 +60,8 @@ public class ExchangeRateModel {
     }
 
     public static void updateRate(String baseCurrencyCode, String targetCurrencyCode, BigDecimal newRate) throws SQLException, nonExistentCurrencyException {
-        Currency baseCurrency = CurrencyModel.getCurrencyByCode(baseCurrencyCode);
-        Currency targetCurrency = CurrencyModel.getCurrencyByCode(targetCurrencyCode);
+        Currency baseCurrency = CurrencyDAO.getCurrencyByCode(baseCurrencyCode);
+        Currency targetCurrency = CurrencyDAO.getCurrencyByCode(targetCurrencyCode);
 
         if (baseCurrency == null || targetCurrency == null) {
             throw new nonExistentCurrencyException();

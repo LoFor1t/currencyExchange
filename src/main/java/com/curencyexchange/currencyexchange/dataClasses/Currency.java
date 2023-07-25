@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "currencies")
 public class Currency {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     public int id;
 

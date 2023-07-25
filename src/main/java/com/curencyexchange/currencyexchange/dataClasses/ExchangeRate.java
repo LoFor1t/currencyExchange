@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @Table(name = "exchangeRates")
 public class ExchangeRate {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     public int id;
 

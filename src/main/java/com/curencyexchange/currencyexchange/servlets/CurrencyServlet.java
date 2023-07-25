@@ -1,7 +1,7 @@
 package com.curencyexchange.currencyexchange.servlets;
 
 import com.curencyexchange.currencyexchange.dataClasses.Currency;
-import com.curencyexchange.currencyexchange.models.CurrencyModel;
+import com.curencyexchange.currencyexchange.models.CurrencyDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -31,7 +31,7 @@ public class CurrencyServlet extends HttpServlet {
         }
 
         try {
-            Currency currency = CurrencyModel.getCurrencyByCode(currencyCode);
+            Currency currency = CurrencyDAO.getCurrencyByCode(currencyCode);
             if (currency == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Валюта не найдена");
                 return;

@@ -1,10 +1,10 @@
 package com.curencyexchange.currencyexchange.servlets;
 
 import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
-import com.curencyexchange.currencyexchange.models.CurrencyModel;
+import com.curencyexchange.currencyexchange.models.CurrencyDAO;
 import com.curencyexchange.currencyexchange.dataClasses.Exchange;
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
-import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
+import com.curencyexchange.currencyexchange.models.ExchangeRateDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -33,16 +33,16 @@ public class ExchangeServlet extends HttpServlet {
         }
 
         try {
-            exchangeRate = ExchangeRateModel.getExchangeRateByCode(from, to);
+            exchangeRate = ExchangeRateDAO.getExchangeRateByCode(from, to);
             if (exchangeRate != null) {
                 rate = exchangeRate.rate;
             } else {
-                exchangeRate = ExchangeRateModel.getExchangeRateByCode(to, from);
+                exchangeRate = ExchangeRateDAO.getExchangeRateByCode(to, from);
                 if (exchangeRate != null) {
                     rate = BigDecimal.valueOf(1/exchangeRate.rate.doubleValue());
                 } else {
-                    ExchangeRate fromExchangeRate = ExchangeRateModel.getExchangeRateByCode("USD", from);
-                    ExchangeRate toExchangeRate = ExchangeRateModel.getExchangeRateByCode("USD", to);
+                    ExchangeRate fromExchangeRate = ExchangeRateDAO.getExchangeRateByCode("USD", from);
+                    ExchangeRate toExchangeRate = ExchangeRateDAO.getExchangeRateByCode("USD", to);
                     if (fromExchangeRate != null && toExchangeRate != null) {
                         rate = BigDecimal.valueOf(toExchangeRate.rate.doubleValue() / fromExchangeRate.rate.doubleValue());
                     } else {
@@ -51,8 +51,8 @@ public class ExchangeServlet extends HttpServlet {
                     }
                 }
             }
-            new ObjectMapper().writeValue(resp.getWriter(), new Exchange(CurrencyModel.getCurrencyByCode(from),
-                    CurrencyModel.getCurrencyByCode(to),
+            new ObjectMapper().writeValue(resp.getWriter(), new Exchange(CurrencyDAO.getCurrencyByCode(from),
+                    CurrencyDAO.getCurrencyByCode(to),
                     rate,
                     amount,
                     rate.multiply(BigDecimal.valueOf(Double.parseDouble(amount)))));

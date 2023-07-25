@@ -7,10 +7,9 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CurrencyModel {
+public class CurrencyDAO {
     public static List<Currency> getCurrencies () throws SQLException {
         try (Session session = DBConnection.getSessionFactory().openSession()) {
             Query<Currency> query = session.createQuery("from Currency", Currency.class);

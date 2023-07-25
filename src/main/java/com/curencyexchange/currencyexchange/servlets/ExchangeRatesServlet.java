@@ -1,13 +1,14 @@
 package com.curencyexchange.currencyexchange.servlets;
 
 import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
-import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
+import com.curencyexchange.currencyexchange.models.ExchangeRateDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateModel.getExchangeRates());
+            new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateDAO.getExchangeRates());
         } catch (SQLException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database is not available.");
         }
@@ -43,8 +44,8 @@ public class ExchangeRatesServlet extends HttpServlet {
         BigDecimal rate = BigDecimal.valueOf(Double.parseDouble(stringRate));
 
         try {
-            ExchangeRateModel.createNewExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
-            new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateModel.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode));
+            ExchangeRateDAO.createNewExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
+            new ObjectMapper().writeValue(resp.getWriter(), ExchangeRateDAO.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode));
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
                 resp.sendError(HttpServletResponse.SC_CONFLICT, "Валютная пара с таким кодом уже существует.");

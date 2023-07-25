@@ -2,7 +2,7 @@ package com.curencyexchange.currencyexchange.servlets;
 
 import com.curencyexchange.currencyexchange.dataClasses.ExchangeRate;
 import com.curencyexchange.currencyexchange.exceptions.nonExistentCurrencyException;
-import com.curencyexchange.currencyexchange.models.ExchangeRateModel;
+import com.curencyexchange.currencyexchange.models.ExchangeRateDAO;
 import com.curencyexchange.currencyexchange.Utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -39,7 +39,7 @@ public class ExchangeRateServlet extends HttpServlet {
         }
 
         try {
-            ExchangeRate exchangeRate = ExchangeRateModel.getExchangeRateByCode(currencyPair.substring(0, 3), currencyPair.substring(3, 6));
+            ExchangeRate exchangeRate = ExchangeRateDAO.getExchangeRateByCode(currencyPair.substring(0, 3), currencyPair.substring(3, 6));
             if (exchangeRate == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Обменный курс для пары не найден");
                 return;
@@ -75,8 +75,8 @@ public class ExchangeRateServlet extends HttpServlet {
         String targetCurrencyCode = currencyPair.substring(3, 6);
 
         try {
-            ExchangeRateModel.updateRate(baseCurrencyCode, targetCurrencyCode, rate);
-            ExchangeRate updatedExchangeRate = ExchangeRateModel.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode);
+            ExchangeRateDAO.updateRate(baseCurrencyCode, targetCurrencyCode, rate);
+            ExchangeRate updatedExchangeRate = ExchangeRateDAO.getExchangeRateByCode(baseCurrencyCode, targetCurrencyCode);
             if (updatedExchangeRate == null) {
                 resp.sendError(HttpServletResponse.SC_NOT_FOUND, " Currency pair does not exist in the database.");
                 return;
